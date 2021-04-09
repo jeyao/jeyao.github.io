@@ -1,0 +1,34 @@
+# Sidebar navigation
+
+- label: 'Introduction'
+  link: '/'
+- label: 'Getting started'
+  link: '/getting-started'
+- label: 'JavaScript'
+  items:
+    - label: '执行机制'
+      link: '/javascript/3.2.2'
+- label: 'Network'
+  items:
+    - label: 'HTTP'
+      link: '/network/http'
+- label: Usage
+  items:
+    - label: 'Creating docs'
+      link: '/usage/creating-docs'
+    - label: 'Navigation'
+      link: '/usage/navigation'
+    - label: 'Shadowing'
+      link: '/usage/shadowing'
+- label: FAQ
+  items:
+    - label: '博客组件'
+      link: '/faq/component'
+- label: More
+  items:
+    - label: FAQ
+      link: /faq
+    - label: 'Github'
+      link: https://github.com/jeyao
+    - label: '语雀'
+      link: https://www.yuque.com/yaoqianshu-n5qp5

@@ -1,0 +1,372 @@
+---
+title: 执行机制
+date: 2021-04-08
+---
+
+import {HighLightSentence,RegularTag} from "../../components/CommonComponents";
+
+
+### 概述
+
+---
+
+本章主要围绕可执行上下文进行阐述，它确定了变量的作用域，即作用范围。
+
+本章主要围绕可执行上下文进行阐述，它确定了变量的作用域，即作用范围。
+
+![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614605790279-8cc1f01a-aa8c-4333-85f6-a8ba84171a83.png#align=left&display=inline&height=300&margin=%5Bobject%20Object%5D&name=image.png&originHeight=300&originWidth=423&size=17807&status=done&style=none&width=423)
+
+
+### 变量提升
+
+---
+
+
+
+**变量提升（Hoisting）**和 JavaScript 底层机制是密不可分的，我们通过以下代码进行说明：
+```javascript
+sayHi();
+console.log(name);
+
+var name = 'xiaoming';
+function sayHi (){ console.log('hello')};
+```
+
+
+**如果按照顺序执行的思路来说，**
+
+- 执行第一行 `sayHi` 时，函数还未被声明，应该会报错。
+- 执行第二行 `name` 时，`name` 变量也未被声明，也应该会报错。
+
+
+
+**但是运行之后的结果是：**
+
+- `hello`
+- `undefined`
+
+
+<HighLightSentence type='warning'>
+    -------------------------- 😲 Waring -------------------------------
+</HighLightSentence>
+
+
+- 🤔** 为什么会发生这种未声明就可以调用的现象？**
+
+   - **【根源】JavaScript 引擎将代码的声明和幅值拆成两个部分处理。**
+
+      - 【🖥】️例如变量 `var name = 'xiaoming'`
+         - 先声明，`var name = undefined`
+         - 再幅值，`name = 'xiaoming'`
+      - 如果是函数，将在执行代码前，就已经完成声明。
+
+
+
+   - **【变量提升】JavaScript 引擎将变量和函数的声明提升至最前端。**
+ -  注意是 `var` 声明的变量，`let` 和 `const` 属于块作用域不适用于这个规则。
+
+
+
+![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614581046093-0be49d2e-893c-4d7d-bae2-5f1729bd9d6b.png#align=left&display=inline&height=212&margin=%5Bobject%20Object%5D&name=image.png&originHeight=212&originWidth=599&size=15754&status=done&style=none&width=599)
+
+
+- ✋ **提问，以下代码是什么输出结果？**
+
+```javascript
+sayHi();
+
+var sayHi = function (){console.log('hello')};
+```
+
+   - 结果为 `undefined` ，因为 `sayHi` 是变量。
+
+
+
+- 🤔** 如果从JavaScript 引擎角度看，变量提升是怎么实现的？**
+
+   - 变量提升只是一种形象化的表述，并不会真的在物理层将代码移至前端。
+   - 所谓提升只是**执行顺序**的提升：
+     - **声明阶段对应引擎的编译阶段**，负责将变量放入至内存，相当于环境搭建。
+     - **幅值阶段对应引擎的执行阶段**，负责利用内存中的数据，进行代码操作。
+   - 接下来就以 **代码 -> 编译 -> 执行** 的顺序进行阐述。
+
+   - **编译阶段**：准备执行的环境。
+    - 首先，引擎会创建**【执行上下文】**，作为**代码的运行环境**。
+    - 遇到 全局作用域，函数作用域以及 `eval` 都会创建新的执行上下文。
+
+    - 然后，所有声明的变量和函数会被存到**【变量环境 Variable Environment】。**
+
+    - 最后，将声明以外的代码编译为字节码。
+    - **执行阶段**：向执行上下文中寻找要求的变量。（由于执行上下文还有其他没介绍，先略过）
+
+
+
+- ✋ **提问，重复声明该如何处理？**
+```javascript
+sayHi();
+function sayHi (){console.log('hello')};
+function sayHi (){console.log('hi')};
+```
+
+   - 后面的会覆盖前面的，所以是 `hi` 。
+
+- 😏 **总的来说，变量提升是 JavaScript 引擎中先编译后执行导致的。**
+    - 首先，在内存中创建执行上下文，提供代码运行的空间。
+    - 然后，编译环节会先将所有函数和变量（`var` 声明的）放至变量环境中。
+    - 最后，引擎再根据执行上下文，对代码进行执行。
+
+
+
+### 调用栈
+
+---
+
+由上文可知，JavaScript 引擎会创建执行上下文，为代码执行提供条件。
+
+
+- 🤔** 什么样的代码可以被分配一个执行上下文？**
+
+   - 有独立作用域的代码块。
+    - **全局代码**，会被自动分配一个全局执行上下文。
+    - **调用函数**，会分配一个函数作用域，在函数执行完后被销毁。
+     - **eval 函数**，少用。
+
+
+
+- 🤔** 全局执行上下文中，肯定会有几个函数，所以两者是怎么嵌套的？**
+
+
+- **借助栈结构，即调用栈，又称执行上下文栈。**
+    - 开局先压入一个全局执行上下文。
+    - 执行到函数的时候，创建函数作用域，再压入调用栈。
+
+- ✋**以下代码的栈结构是什么样子的？**
+
+**
+```javascript
+var a = 2;
+function add2 ( b, c ){ return b+c }
+function add3 ( b, c ){
+  var d = 10;
+  res = add2(b,c);
+  return res + d;
+}
+add3(3,6)
+```
+
+   - **创建全局上下文，将其压入栈底。**
+ - 先编译全局的变量声明，然后开始执行代码。
+ - 执行第一行时，给变量 `a` 幅值。
+
+        ![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614588371505-0c5b668c-17d6-4f51-8541-2e9e58c0f327.png#align=left&display=inline&height=241&margin=%5Bobject%20Object%5D&name=image.png&originHeight=241&originWidth=671&size=20794&status=done&style=none&width=671)
+
+   - **调用 `add3` ，创建执行上下文，将其压入栈中。**
+
+
+
+![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614588704598-9fe8bdc3-e397-42c0-8633-16a04098aab2.png#align=left&display=inline&height=364&margin=%5Bobject%20Object%5D&name=image.png&originHeight=364&originWidth=668&size=35620&status=done&style=none&width=668)
+
+   - **调用 `add2`，创建执行上下文，将其压入栈中。**
+ - 由于直接返回两者加和，执行完立即销毁作用域。
+ - `add3` 执行上下文中的 `res` 变量得到值。
+
+![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614588905948-46a58a37-72b7-4164-8a7f-c8fd94571890.png#align=left&display=inline&height=372&margin=%5Bobject%20Object%5D&name=image.png&originHeight=372&originWidth=672&size=37190&status=done&style=none&width=672)
+
+   - `add3` 执行完毕，销毁其作用域。
+   - 全局代码执行完毕，全局作用域销毁，代码执行完毕。
+
+
+
+- 😏 **总的来说，执行上下文通过调用栈管理，并与函数的调用息息相关。**
+ - 除了一开始会创建的全局执行上下文，其他的执行上下文与函数有直接关系。
+ - 所以可以通过跟踪执行上下文，追踪函数的调用 `console.trace()`。
+
+
+
+### 作用域链与闭包
+
+---
+
+由上可见，执行上下文是通过栈的方式进行存储的，那当我们调用了一个当前上下文不存在的变量时，我们是直接报错，还是去其他执行上下文中寻找？
+
+
+我们通过以下的代码辅助理解：
+```javascript
+function sayName(){
+  console.log( name )
+}
+
+function fun (){
+  var name = 'xiaohuang';
+  sayName();
+}
+
+var name = 'xiaoming';
+fun();
+```
+**如果按照执行上下文上下位置的思路来说，**
+
+- 先执行函数 `fun` ，创建执行上下文，内部创建了 `name` 变量。
+- 然后再执行 sayName 函数，在 `fun `上下文之上创建新的上下文，其中调用的`name`变量应该来自 `fun` 上下文。
+
+
+
+**但是运行之后的结果是：**
+
+- `xiaoming`
+- 🤔** 这是为什么？**
+
+**
+
+   - **JavaScript 采用的是静态作用域，它的上下文关系是创建的时候确定的**。
+ - 如上例， `fun`和 `sayName`都是在全局变量中创建的，所以外层的作用域指向全局。
+
+
+
+   - **这个静态外部执行上下文，被存在 outer 变量里**。
+   - **如果代码中引用了当前上下文中没有的变量，会顺着outer 查找，这个查找链就是作用域链**。
+
+
+
+![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614592519023-82b2b24f-c905-4c1a-9a41-9d7d9a68cb3c.png#align=left&display=inline&height=371&margin=%5Bobject%20Object%5D&name=image.png&originHeight=371&originWidth=524&size=25101&status=done&style=none&width=524)
+
+- 🤔** 那如果函数作为输出传出来，而 outer 指向上下文被销毁了怎么办？**
+
+**
+
+   - **这个就是闭包，它会将其父执行上下文封装为一个独特的 `closure` 对象，存在内存中**。
+ - 如果在函数 `outside` 里定义了函数 `inside` ，根据静态作用域特性，`inside`执行上下文的 outer 应该指向 `outside`。
+ - 如果将函数 `inside` return 出来，此时 `outside`理应被销毁，但是有指向它的函数，所以会被封装为 `closure` 对象，储存在内存中。
+ - 于是 `outside` 函数成为 `inside`函数的专属闭包，只有 `inside`能从 outer 引用调用到 `outside`的属性。
+
+
+
+我们通过一个例子理解一下
+```javascript
+function foo() {
+  var name = "xiaoming";
+  var age = 18;
+  var innerBar = {
+    getName:function(){
+      return name
+    },
+    setName:function(newName){
+      name = newName;
+    }
+  }
+  return innerBar;
+}
+
+var bar = foo();
+bar.setName("xiaohuang");
+console.log(bar.getName());
+```
+
+   - 左图为 `foo` 函数中执行 `return innerBar` 时的调用栈。
+   - 右图为执行完 `return innerBar` 后的调用栈。
+ - 此时，`foo` 执行上下文应该被销毁，但是返回出的 `innerBar` 中的两个函数，都会访问 `name` 变量。
+ - 所以 `name` 变量会以 `closure` 对象的状态留在内存中，只为 `getName` 和 `setName` 提供数值。
+
+        ![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614599710205-669a721b-730d-4c00-8e33-d5710737befe.png#align=left&display=inline&height=318&margin=%5Bobject%20Object%5D&name=image.png&originHeight=318&originWidth=643&size=30010&status=done&style=none&width=643)
+
+   - 当我们调用 `bar.setName('xiaoming');`，调用栈如下图所示。
+
+![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614600591391-852c6248-8139-4763-b6ec-1c3211973381.png#align=left&display=inline&height=345&margin=%5Bobject%20Object%5D&name=image.png&originHeight=345&originWidth=368&size=16698&status=done&style=none&width=368)
+
+- 😏 **总的来说，执行上下文之间的调用链是写代码的时候就确定的，这是静态作用域的结构。**
+
+
+
+### 块级作用域
+
+---
+
+在 ES6 之前，变量都是通过 `var` 声明的，但是其存在变量提升的问题
+
+
+- 🤔** 变量提升会引起什么问题？**
+
+**
+
+   - **变量会在不经意之间被覆盖**。
+ - 由于 `var` 可以穿透大括号，有一些未被执行的 `if` 条件句中的声明可能会生效。
+   - **本应该销毁的变量，没有被销毁**。
+ - 所有变量只会在执行上下文结束时，才会被销毁。
+
+
+
+[🖥️](https://emojipedia.org/desktop-computer/) 用以下两个例子说明这个问题：
+```javascript
+// 1
+var name = 'xiaoming';
+function sayName (){
+  console.log(name)
+  if(false) var name = 'xiaohuang';
+  console.log(name)
+}
+sayName() // undefined undefined
+
+// 2
+for( var i = 0 ; i < 10 ; i++ ){};
+console.log(i) // 10
+```
+
+- 🤔** 所以如何解决这些问题？**
+
+**
+
+   - **将作用域的颗粒度缩小，将大括号看成分界的标志（块级作用域）**。
+
+
+
+   - 我们用 `let`和 `const` 两个关键词声明块级作用域中变量。
+ - **作用域块内声明的变量不影响块外面的变量**，外部也无法访问内部。
+ - **变量的查找顺序是由内向外查找**。
+
+
+
+   - 在执行上下文中，JavaScript引擎将**块级变量存在词法环境中**。
+ - 如果一个大括号中有 `let`和 `const` 关键词，都将会在词法环境中创建一个作用域块。
+ - 词法环境内部本质上维护了一个栈结构，从上到下对应代码中从从里到外。
+
+
+
+[🖥️](https://emojipedia.org/desktop-computer/) 用以下例子说明块级作用域：
+```javascript
+function foo(){
+  var a = 1
+  let b = 2
+  {
+    let b = 3
+    var c = 4
+    let d = 5
+    console.log(a)
+    console.log(b)
+  }
+  console.log(b)
+  console.log(c)
+  console.log(d)
+}
+foo()
+```
+
+   - **在编译阶段完成后，调用栈如下图所示。**
+ - 首先，所有的 `var` 声明不受大括号的限制，将会被先存入变量环境中。
+ - 然后，在 `foo` 函数作用域中，只有 b 是在该作用域声明的块级变量，所以在词法环境中被声明。
+ - 其他的块级变量，因为在大括号中，外部对内部不可视，导致不会被编译。![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614604512371-9eb7d82f-1eb2-41f5-97cf-a5c875cd51ca.png#align=left&display=inline&height=340&margin=%5Bobject%20Object%5D&name=image.png&originHeight=340&originWidth=330&size=11863&status=done&style=none&width=330)
+   - **当代码执行到大括号时，调用栈如下图所示。**
+ - 此前，`a` 和 `b` 被赋值。
+ - 当执行到大括号时，首先会编译大括号中的所有变量。
+
+**![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614604799929-736b0e14-6c8b-49e8-a0ed-bd4441e34971.png#align=left&display=inline&height=344&margin=%5Bobject%20Object%5D&name=image.png&originHeight=344&originWidth=328&size=13530&status=done&style=none&width=328)**
+
+   - **当代码执行到 **`**console**`** 时，调用栈如下图所示。**
+
+**![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614605121450-d7866c30-47fc-4da4-abed-517605fcc305.png#align=left&display=inline&height=449&margin=%5Bobject%20Object%5D&name=image.png&originHeight=449&originWidth=456&size=23220&status=done&style=none&width=456)**
+
+   - **当代码执行到大括号外部的  `console` 时，调用栈如下图所示。**
+ - 大括号里的块作用域被销毁。
+
+![image.png](https://cdn.nlark.com/yuque/0/2021/png/8415624/1614605319940-7733f84e-c21f-4fdc-b156-73956805830e.png#align=left&display=inline&height=452&margin=%5Bobject%20Object%5D&name=image.png&originHeight=452&originWidth=435&size=20687&status=done&style=none&width=435)
+
+   - 最终结果 1 3 2 4 d报错

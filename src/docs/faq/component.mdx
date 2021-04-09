@@ -1,0 +1,55 @@
+---
+title: 博客组件
+description: 本博客采用的组件说明.
+---
+
+import {
+    WordTitle,
+    RegularTitle,
+    ArticleEnding,
+    QuestionTitle
+} from "../../components/CommonComponents";
+
+## 规范化标题 RegularTitle
+
+本博客将一些常用的标题类型封装成组件，其中可选种类为：
+
+- **阐述 show**  - 对关键概念含义以及关系的解释、解释原因推导过程。
+- **实例 example** - 为说明概念而准备的实例。
+- **注意点 note** - 对关键点的提示。
+- **总结 summary** - 对知识整体的总结。
+
+| Key                    | Required | Description                |
+| ---------------------- | -------- | -------------------------- |
+| type                   | Yes      | tag type                   |
+| title                  | No       | tag title                  |
+
+<RegularTitle type='example' title='Hello World'/>
+
+```javascript
+    console.log('Hello World')
+```
+
+## 规范化标签 RegularTitle
+
+本博客将一些常用的标签类型封装成组件，其中可选种类为：
+
+- **关键词 keyword**  - 本节的关键词。
+- **核心 key** - 本节的核心要点。
+
+| Key                    | Required | Description                |
+| ---------------------- | -------- | -------------------------- |
+| type                   | Yes      | tag type                   |
+
+<WordTitle type='define'>V8</WordTitle>
+
+V8 is Google’s open source high-performance JavaScript and WebAssembly engine, written in C++. It is used in Chrome and in Node.js, among others.
+
+
+## 问题标题 QuestionTitle
+
+<QuestionTitle>让我们用问题引出概念吧</QuestionTitle>
+
+## 文章结尾 ArticleEnding
+
+<ArticleEnding/>
