@@ -1,0 +1,2 @@
+(self.webpackChunkjeyao_docs=self.webpackChunkjeyao_docs||[]).push([[883],{59616:function(t,n,e){"use strict";e.r(n),e.d(n,{default:function(){return f}});e(67294);var u=e(25444),o=e(52749),c=e(2224),l=e(23431);function f(){return(0,l.tZ)(o.Z,{title:"Page not found!"},(0,l.tZ)(c.Z,{title:"404: Not found"}),(0,l.tZ)("p",null,"天哪，没找到你要找的网页"),(0,l.tZ)("p",null,"如果你想回到首页，请 ",(0,l.tZ)(u.Link,{to:"/"},"click here"),"。"))}}}]);
+//# sourceMappingURL=component---src-pages-404-js-ae3e46cc9e78a425fdb8.js.map
