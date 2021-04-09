@@ -6,7 +6,7 @@
 <url> <loc>https://jeyao.github.io/usage/creating-docs</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/usage/navigation</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/usage/shadowing</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://jeyao.github.io/network/http</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/javascript/3.2.2</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/faq/component</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://jeyao.github.io/network/http</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 </urlset>
