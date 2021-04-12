@@ -5,7 +5,6 @@
 <url> <loc>https://jeyao.github.io/network/http</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/getting-started</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/javascript/3.2.2</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://jeyao.github.io/html&amp;css/transition&amp;animation</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/faq/component</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/algorithm/classicAlg</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/algorithm/dp</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -14,5 +13,6 @@
 <url> <loc>https://jeyao.github.io/algorithm/treeGraphMap</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/faq/resource</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/algorithm/other</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://jeyao.github.io/html&amp;css/transition&amp;animation</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/algorithm/LeetCodeTree</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 </urlset>
