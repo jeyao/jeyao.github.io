@@ -15,6 +15,7 @@
 <url> <loc>https://jeyao.github.io/network/http</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/host/browser-basic</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/algorithm/treeGraphMap</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://jeyao.github.io/javascript/types</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/host/DOM-BOM</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://jeyao.github.io/algorithm/LeetCodeTree</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 </urlset>
