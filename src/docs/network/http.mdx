@@ -6,8 +6,11 @@ import {
     QuestionTitle,
     RegularTitle,
     WordTitle,
-    ArticleEnding
+    ArticleEnding,
+    SectionTitle
 } from "../../components/CommonComponents";
+
+<SectionTitle>1</SectionTitle>
 
 ## HTTP/0.9
 
@@ -49,6 +52,9 @@ HTTP/0.9 于 1991 年被提出，主要用于学术交流，只需要传递简�
 - **返回格式**：只有 HTML 文件，采用 ASCII 编码流。
 - **TCP 连接**：一个请求创建一个连接，无法复用，无法维持。
 
+
+<SectionTitle>2</SectionTitle>
+
 ## HTTP/1.0
 
 ---
@@ -69,7 +75,7 @@ HTTP/0.9 于 1991 年被提出，主要用于学术交流，只需要传递简�
 
 <QuestionTitle>HTTP/1.0 是如何支持多文件下载 ？</QuestionTitle>
 
-**核心：引入信息头。**
+<WordTitle type='key'>HTTP/1.0通过引入信息头确定文档类型</WordTitle>
 
 - **加入文件类型字段。**客户端需要通知服务器需要什么类型的数据。
 - **加入压缩方式字段。**需要通信的文件越来越大，需要进行压缩，此时服务器就要告诉客户端怎么压缩的。
@@ -107,6 +113,8 @@ accept-language: zh-CN,zh
 - **请求方式**：+支持GET、POST以及HEAD请求。
 - **返回格式**：+各种各样，如HTML/JS/CSS/音频/视频。
 - **TCP 连接**：一个请求创建一个连接，无法复用，无法维持。
+
+<SectionTitle>3</SectionTitle>
 
 ## HTTP/1.1
 
@@ -165,6 +173,8 @@ accept-language: zh-CN,zh
 - **返回格式**：各种各样，如HTML/JS/CSS/音频/视频，只是引用关系更为复杂。
 - **TCP 连接**：+多条TCP可持续连接，但是面临队头阻塞的问题。
 
+<SectionTitle>4</SectionTitle>
+
 ## HTTP/2
 
 ---
@@ -177,7 +187,7 @@ HTTP/2 诞生于 2015 年，它的最大的特点是 All in 二进制，基于�
 
 <QuestionTitle>HTTP/2 要解决 HTTP/1.1 的什么问题？</QuestionTitle>
 
-**【核心问题】带宽利用率低。**
+<WordTitle type='key'>HTTP/1.1的带宽利用率低</WordTitle>
 
 - **TCP 的慢启动，传输数据初期较为费时。**
     - 当 TCP 建立连接后，会进入发送数据状态，刚开始发送速率很慢，随后渐渐达到理想速度。这是一个TCP 为了减少网络拥塞的一种策略。
@@ -224,7 +234,11 @@ HTTP/2 诞生于 2015 年，它的最大的特点是 All in 二进制，基于�
 - **返回格式**：各种各样，如HTML/JS/CSS/音频/视频。
 - **TCP 连接**：+单条TCP可持续连接，支持复用。
 
+<SectionTitle>5</SectionTitle>
+
 ## HTTP/3
+
+---
 
 <WordTitle type='abstract'>QUIC</WordTitle>
 

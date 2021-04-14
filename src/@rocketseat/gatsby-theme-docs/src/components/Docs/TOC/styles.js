@@ -28,7 +28,6 @@ export const Container = styled.div`
     font-size: 14px;
     font-weight: bold;
     letter-spacing: 0.142em;
-    margin-top: 0rem;
     border: none;
     margin: 0 0 16px 0;
   }

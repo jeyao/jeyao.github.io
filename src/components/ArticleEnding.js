@@ -1,25 +1,23 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { css, jsx } from "@emotion/react";
+import { jsx } from "@emotion/react";
+import styled from "@emotion/styled";
 
+const ArticleEndingContainer = styled.div`
+  width: 100%;
+  margin: 50px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family : 'Shadows Into Light',serif;
+  font-size: 32px;
+  font-weight: bolder;
+`
 
 const ArticleEnding = () => (
-    <div
-        css={css`
-          width: 100%;
-          font-family : 'Shadows Into Light',serif;
-          font-size: 32px;
-          font-weight: bolder;
-          
-          margin: 50px 0;
-          
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        `}
-    >
+    <ArticleEndingContainer>
         Thanks for reading
-    </div>
+    </ArticleEndingContainer>
 );
 
 export default ArticleEnding;

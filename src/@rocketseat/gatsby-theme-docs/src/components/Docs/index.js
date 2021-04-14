@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 
 import Layout from '../Layout';
-import SEO from '../SEO';
+import Seo from '../SEO';
 import PostNav from './PostNav';
 import EditGithub from './EditGithub';
 
@@ -15,7 +15,7 @@ export default function Docs({ mdx, pageContext }) {
 
   return (
     <>
-      <SEO title={title} description={description} slug={slug} image={image} />
+      <Seo title={title} description={description} slug={slug} image={image} />
       <Layout
         disableTableOfContents={disableTableOfContents}
         title={title}

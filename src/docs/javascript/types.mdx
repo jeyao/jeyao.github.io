@@ -1,0 +1,626 @@
+---
+title: JS基础 - 类型
+---
+
+import {
+    QuestionTitle,
+    RegularTitle,
+    WordTitle,
+    ArticleEnding,
+    SectionTitle,
+    StepTitle
+} from "../../components/CommonComponents";
+
+<SectionTitle>1</SectionTitle>
+
+## 从语法角度看类型
+
+---
+
+
+### 原始类型
+
+---
+
+**关键问题一览**
+- 基本类型包含哪几种类型，其中哪些是 Primitive Types。
+- Undefined Vs Undeclared Vs Uninitialized。
+- typeof 判定哪个结果和基本类型不符合。
+- NaN 是什么？
+- isNaN() VS Number.isNaN()
+- 如何用区分-0和0
+
+#### 基本类型
+
+我们常常会听到这样一句话来表述 JavaScript 中的类型：
+
+> In JavaScript, everything is an object.
+
+但这正确吗？很可惜这是错的，在 JavaScript 规范中明确写道：
+
+> The ECMAScript language types are Undefined, Null, Boolean, String, Symbol, Number, and Object.
+
+这些就是 JavaScript 中的基本类型。除了 `Object` 之外，其他类型也被称为原始类型 ( Primitive Types ) ，当然还有个 bigInt 类型，可能会在未来被加入。
+
+
+<RegularTitle type='note' title='Undefined Vs Undeclared Vs Uninitialized'/>
+
+- `Undefined` 表示这个变量被声明了，但是现在没有值。
+- `Undeclared` 表示这个变量根本没有在当前作用域声明。
+- `Uninitialized` 表示还未充分被初始化（ 在 TDZ 中的变量 ），引用会返回 `ReferenceError`
+
+<QuestionTitle>TDZ是什么意思？</QuestionTitle>
+
+<WordTitle type='define'> TDZ | Temporal Dead Zone </WordTitle>
+
+ES6 : The term "temporal" is used because the zone depends on the order of execution (time) rather than the order in which the code is written (position).
+
+<QuestionTitle>有了类型的概念，那我们如何知道一个变量的类型那？</QuestionTitle>
+
+在 JavaScript 中一般采用 `typeof` 获取对象的基本类型：
+
+```javascript
+var v ;
+typeof v; //undefined
+v = 1;
+typeof v; // number
+v = 'hi';
+typeof v; // string
+v = true;
+typeof v; // boolean
+v = {};
+typeof v; // object
+v = Symbol();
+typeof v; // symbol
+```
+
+<RegularTitle type='note' title='typeof 对 null 和 function 不是基本类型'/>
+
+可以认为是 `typeof` 中不严谨的地方，即对 `null` 和 `function` 的判断。
+
+```javascript
+var v = null ;
+typeof v; // object
+v = function(){};
+typeof v; // function
+```
+
+<br/>
+
+#### 特殊类型
+
+**除了基本类型外，还有两个值得注意的特殊情况***,分别是 `NaN` 和 `-0` ，都是和数字相关的变量。
+
+<QuestionTitle> NaN 是什么？</QuestionTitle>
+
+<WordTitle type='define'> NaN | invalid number </WordTitle>
+
+`NaN` 表示无效数字，注意前提是个数字。这是出于对数字类型的缺省值的考虑，即我知道这里填一个数字，但是还不知道它的值时多少。
+
+凡是`NaN` 涉及的运算，一律为`NaN`，并且 `NaN` 和 `NaN` 之间并不相同。
+
+```javascript
+var age = Number( "18" );         // 18
+var ageUnknown = Number( "n/a" ); // NaN,这里强制转换为数字
+age - 'birthday'                  // NaN,减法强制转换为数字
+
+ageUnknown === ageUnknown         // OOPS!! false NaN 之间不相等
+```
+
+<QuestionTitle> 那如何判断变量是 NaN ？</QuestionTitle>
+
+在 ES5 时期，给出的方案是 `isNaN()`, 它的本意是 **通过Number方法把参数转换成数字类型，如若转换成功，则返回false，反之返回true，它只是判断参数是否能转成数字，不能用来判断是否严格等于NaN。**
+
+```javascript
+isNaN(Number( "18" ));   // false
+isNaN(Number( "n/a" ));  // true
+isNaN('birthday');       // OOPS!! true
+```
+
+可以看到，对于`'birthday'`这个字符串，本来不应该是 `NaN`（不是数字），但是 `isNaN()` 会先强制转换字符串为数字对象，然后在进行判断。
+
+为了解决这个问题，ES6 提出了 `Number.isNaN()` ，它是严格遵循 `NaN` 的规则的，会首先判断传入的值是否为数字类型，如不是，直接返回 `false`。
+
+```javascript
+isNaN(Number( "18" ));   // false
+isNaN(Number( "n/a" ));  // true
+isNaN('birthday');       // false
+```
+
+<RegularTitle type="summary" title='isNaN() VS Number.isNaN()'/>
+
+`Number.isNaN() `不会像 `isNaN()` 一样，相对传入参数进行转换，如果不是 Number 类型，直接返回 `false`。
+
+<QuestionTitle> 说完 NaN，那 -0 有什么特别的?</QuestionTitle>
+
+`-0` 的符号一般用来表示方向，像反向加速度为 0 。但是在 JavaScript 中对 `-0` 的支持不是很好，连我们最肯定的 `===` 也分别不出 `-0` 和 `0` 的区别。
+
+<QuestionTitle> 如何区分 -0 ？</QuestionTitle>
+
+唯一能识别 `-0` 的是 `Object.is` ,或者采用 `1/x === -Infinity`进行判断。
+
+```javascript
+var negativeZero = -0;
+negativeZero === -0;     // true;
+
+negativeZero.toString()  // OOPS!! "0" toString 不行
+negativeZero === -0;     // OOPS!! true === 也不行
+
+Object.is(negativeZero,-0) // true
+Object.is(negativeZero,0)  // false
+```
+
+<QuestionTitle> 这么不支持 -0，是不是也不能提取符号 ？</QuestionTitle>
+
+确实，但是准确说是对 `0` 的支持不好。一般来说，我们用 `Math.sign()` 来获取符号，效果如下：
+
+```javascript
+Math.sign(-10);   // -1
+Math.sign(10);    // 1
+Math.sign(-0);    // OOPS!! -0
+Math.sign(0);     // OOPS!! 0
+```
+
+可以看出，`0` 的结果很神奇，跟正负一一点关系也没有，可能是一开始就没考虑 `0` 还能有符号，所以如果需要获取 `0` 的符号，需要自己实现：
+
+```javascript
+function sign(v) {
+    return v !== 0 ? Math.sign(v) : Object.is(v,-0)? -1 : 0;
+}
+sign(-0);
+sign(0);
+```
+
+<RegularTitle type='example' title='手动实现 Object.is '/>
+
+```javascript
+function isObject( x, y ){
+    const isNZero = (x)=>x===0&&(1/x)===-Infinity;
+    const isNaN = (x)=>x!==x;
+
+    if(isNZero(x)||isNZero(y)) return isNZero(x)&&isNZero(y)
+    else if(isNaN(x)&&isNaN(y)) return true;
+    else if(x===y) return true;
+    return false;
+}
+```
+
+<br/>
+
+#### 内置对象
+
+<RegularTitle type='show' title='对于类型来说，JavaScript 内置几个基本对象'/>
+
+| 需要 new                | 不需要 new                           |
+| ---------------------- | ------------------------------------ |
+| Object()               | String()                             |
+| Array()                | Number()                             |
+| Function()             | Boolean()                            |
+| Date()                 |           |
+| RegExp()               |           |
+| Error()                |           |
+
+<br/>
+
+### 类型转换
+
+---
+
+<WordTitle type="define"> 抽象操作 | Abstract Operation </WordTitle>
+
+抽象操作（Abstract Operation）是一些在规范中经常被使用的算法，它们被参数化以被其他算法中使用。[详见](https://262.ecma-international.org/9.0/#sec-algorithm-conventions-abstract-operations)
+
+<WordTitle type="define"> 类型转换 | Type Conversion </WordTitle>
+
+类型转换 Type Conversion 是一种抽象操作，作用很好理解，就是字面意思。由于 JavaScript 是动态、弱类型语言，导致需要频繁按需求频繁类型转换。
+
+<br/>
+
+<RegularTitle type='show' title='最常见的类型转换分别是 ToPrimitive、ToNumber、ToString、ToBoolean'/>
+
+#### ToPrimitive
+
+<WordTitle type="define"> ToPrimitive(input,[,PreferredType]) </WordTitle>
+
+抽象操作 `ToPrimitive` 接收一个 `input` 参数和一个可选参数 `PreferredType`，目的是将 `hint` 转换为原始类型（ 非对象类型 ）。
+
+<RegularTitle type='flow' title='ToPrimitive的执行流程'/>
+
+<StepTitle title='判断是否为对象' index={1}/>
+
+如果`input`是对象执行后续操作，不是的话直接返回即为原始类型。
+
+<StepTitle title='根据 PreferredType 生成 hint' index={2}/>
+
+总体来说分为 `string` 和 `number` 两种类型，默认是`number`。
+
+<StepTitle title='执行 OrdinaryToPrimitive(input, hint)' index={3}/>
+
+`OrdinaryToPrimitive` 是具体执行类型转化操作的地方。大体分为两种情况：
+- `hint==="number"` : 依次执行 `toString`，`valueOf`。
+- `hint==="string"` : 依次执行  `valueOf`，`toString`。
+
+<br/>
+
+<RegularTitle type="example" title="下面用具体例子说明这个过程"/>
+
+```javascript
+'1' + [1,2,3,4]; // '11,2,3,4'
+```
+
+根据加法的规范，两个加数会自动执行 `ToPrimitive()` 操作，前者可以直接返回，后者是数组会进行类型转换。
+由于`PreferredType`没有设置 `hint` ，直接变成默认值 `number`,执行`toString`，`valueOf`。
+
+```javascript
+var tmp = [1,2,3,4];
+tmp.valueOf(); // [1,2,3,4]
+tmp.toString(); // '1,2,3,4'
+```
+
+于是就变成了两个字符串相加，即为`'11,2,3,4'`
+
+<br/>
+
+#### ToString
+
+由于`ToPrimitive`用到了`toString`，与之相关的原始操作是`ToString`。
+
+<WordTitle type="define"> ToString ( argument ) </WordTitle>
+
+`ToString` 可以转换**除了Symbol以外**的各种类型。对于原始类型来说，就是直接添加`""`，对于对象来说，先调用`ToPrimitive(input,hint String)`再处理。
+
+```javascript
+ToString(null) === 'null'
+ToString(undefined) === 'undefined'
+ToString(true) === 'true'
+ToString(1) === '1'
+```
+
+所以这里着重说一下 `toString` 操作，对于数组来说，其实就是去掉`[]`,然后保留`，`。注意`null`和`undefined`会被识别为空。
+
+```javascript
+'' + [] === ''
+'' + [1,true,false]  === '1,true,false'
+'' + [null,undefined]  === ','
+'' + [[],[],[]] === ',,,'
+```
+
+对于对象来说，就脱不掉`{}`了，一般直接返回 `[object Object]` 。不过可以设置对象的`toString`属性，强制转化为其他类型。
+
+```javascript
+'' + {} === `[object Object]`
+'' + {a : 1}  === `[object Object]`
+'' + {toString(){return 'hi'}}  === 'hi'
+```
+
+<RegularTitle type='note' title='显而易见，强制将对象转换为字符串只会有[object Object],要是想具体了解里面的具体内容还是要看 JOSN-stringify'/>
+
+<br/>
+
+#### ToNumber
+
+<WordTitle type="define"> ToNumber ( argument ) </WordTitle>
+
+`ToNumber`与`ToString`相同，都是可以转化各种类型，如果是对象先用`ToPrimitive(hint number)`转化。
+
+但是`ToNumber`对应一些特殊值的处理有很多遗留问题，
+- `''` 和 `null` 都表示没有，却被转化为具体数字 `0` ( 可能采取传统 0 为空的观点) ，不过理论上应该是 `NaN`
+- 反倒是`undefined` 转换完为 `null`
+
+```javascript
+ToNumber('') === 0 // OOPS
+ToNumber('0') === 0
+ToNumber('-0') === -0
+ToNumber('.')  // NaN
+ToNumber(false) === 0
+ToNumber(true) === 1
+ToNumber(null) === 0  // OOPS NaN
+ToNumber(undefined) // OOPS NaN
+
+```
+
+对于对象来说，采用的是`ToPrimitive(hint number)`，即`toString`，`valueOf`，然后再强制转换为数字。
+所以就是 `ToString` 再加一个数字转换。
+
+```javascript
+Number([""]) === 0
+Number(["-0"]) === -0
+Number([null]) === 0
+Number([undefined]) === 0
+Number([1,2,3]) // NaN
+Number({a:1}) // NaN
+Number({valueOf(){return 3}}) === 3
+```
+
+#### ToBoolean
+
+<WordTitle type="define"> ToBoolean ( argument ) </WordTitle>
+
+`ToBoolean` 相对比较简单，就是查表操作。凡是不是 `Falsely` 值的数值，就是 `Truly` 变量。
+
+| Falsely                |
+| ---------------------- |
+| 0 -0                   |
+| null                   |
+| undefined               |
+| NaN                    |
+| false                  |
+
+
+#### 边界问题 | Corner Cases
+
+<QuestionTitle> 从上面的转换结果，可以发现违背规范的情况经常出现在边界值 </QuestionTitle>
+
+此节就详细分析值得注意的边界情况，在编程时需要注意。
+
+对于数字来说，理论上空或者无效数字应该皆为 `NaN`，但是 JavaScript 中将一些情况设置为 `0` 。
+
+```javascript
+Number("")            // OOPS!! 0  认为
+Number("  \t\n")      // OOPS!! 0  会自动去除空格，\t\n 不加入考虑
+Number( null )        // OOPS!! 0
+Number( undefined )    // NaN
+Number( [] )          // OOPS!! 0
+Number( [1,2,3])      // NaN
+Number( [null])       // OOPS!! 0
+```
+
+对于字符来说，最大的问题是 `null` 和 `undefined` 的处理。
+
+```javascript
+String( -0 )         // "0"
+String( null )       // "null"
+String( undefined )   // "undefined"
+String( [null] )     // ""
+String( [undefined])  // ""
+```
+
+<RegularTitle type='summary' title='总结 ToPrimitive、ToString、 ToNumber 以及 ToBoolean'/>
+
+- `ToBoolean`最为简单，就是查表，如果不是 `Falsely` 值中的情况，就直接为 `true` 。
+- `ToString` 和 `ToNumber` 对于原始类型都有其自己的判定规则，但是对于对象类型，都要先执行 `ToPrimitive`。
+- `ToPrimitive`内置 `valueOf` 和 `toString` 方法，不同 `hint` 操作顺序不同。
+
+<br/>
+
+#### 转换时机 | Case
+
+<QuestionTitle> 什么时候 Number to String ？</QuestionTitle>
+
+**隐式转换 ： 字符串拼接**
+
+字符串拼接有两种常见情况，分别是 `数字+字符串` 和 模板字符串。
+
+```javascript
+var num = 1;
+console.log( num + '16');  // '116'
+console.log( `${num}16`);  // '116'
+```
+
+**显式转换 ： Array.join('') / String()**
+
+如果我想主动控制类型转换，可以使用这两种方法。
+
+```javascript
+var num = 1;
+console.log( [num].join('') + '16');  // '116'
+console.log( `${String(num)}16`);  // '116'
+```
+
+<QuestionTitle> 什么时候 String to Number ？</QuestionTitle>
+
+**隐式转换 ： 运算**
+
+特别注意的是 `+` 的情况，如果是上文中  `数字+字符串` 的搭配，会认为是字符串拼接。要想字符串转数字，需要使用`+字符串`。
+
+```javascript
+var str = '1';
+console.log( 1+str);      // '11'
+console.log( +str);       // 1
+console.log( str - 1 );   // 0
+```
+
+**显式转换 ： Number()**
+
+```javascript
+var str = '1';
+console.log( 1+ Number(str) );      // 2
+```
+
+<QuestionTitle> 什么时候 to Boolean ？</QuestionTitle>
+
+**隐式转换 ： 条件判定**
+
+```javascript
+var str = '1';
+if(str) console.log( true );      // true
+if(!!str) console.log( true );   //
+```
+
+**显式转换 ： Boolean()**
+
+```javascript
+Boolean( undefined ) // false
+Boolean( null )     // false
+Boolean( {} )       // true
+```
+
+<RegularTitle type='show' title='除此之外，JavaScript 还可以直接使用原始类型的属性，这是为什么？'/>
+
+<WordTitle type="define"> 装箱 | Boxing </WordTitle>
+
+箱子操作会将原始类型封装成对象，使我们得到该类型的属性和方法。
+
+<br/>
+
+<RegularTitle type="summary" title="总的来说，类型转换有好有坏，但是相对于回避它，不如更深入的了解"/>
+
+>It is irresponsible to knowingly avoid usage of a feature that can improve code readability
+
+<br/>
+
+### 等号
+
+---
+
+上节中的类型转换，还有一个重要出现场景，那就是双等号 Double Equality `==` 。
+
+根据 [文档](https://262.ecma-international.org/9.0/#sec-strict-equality-comparison)
+双等号称之为 Abstract Equality Comparison ，而三等于称为 Strict Equality Comparison。
+
+<RegularTitle type="flow" title='Abstract Equality Comparison 的执行步骤'/>
+
+假如我们执行 `x==y` ，会遵循以下步骤：
+
+<StepTitle title="如果 x 和 y 类型一致" index='1'/>
+
+- **Return** 严格相等 `x === y`
+
+<StepTitle title="如果 x 和 y 都是 null 或者 undefined " index='2'/>
+
+- `x` 为 `null` 并且 `y` 为 `undefined` ，**Return** true
+- `x` 为 `undefined` 并且 `y` 为 `null` ，**Return** true
+
+<StepTitle title="如果 x 和 y 有一个为对象 " index='3'/>
+
+- `y` 为 `object` ，**Return** `x == ToPrimitive(y)`.
+- `x` 为 `object` ，**Return** `y == ToPrimitive(x)`.
+
+<StepTitle title="如果 x 和 y 有一个为对象 " index='4'/>
+
+- 只有 `y` 为 `object` ，**Return** `x == ToPrimitive(y)`.
+- 只有 `x` 为 `object` ，**Return** `y == ToPrimitive(x)`.
+
+<StepTitle title="如果 x 和 y 一个为数字一个为字符串 " index='5'/>
+
+- `x` 为 `number` 并且 `y` 为 `string` ，**Return** `x == ToNumber(y)`.
+- `x` 为 `string` 并且 `y` 为 `number` ，**Return** `y == ToNumber(x)`.
+
+<StepTitle title="如果 x 和 y 一个为布尔值 " index='6'/>
+
+- `y` 为 `boolean` ，**Return** `x == ToNumber(y)`.
+- `x` 为 `boolean` ，**Return** `y == ToNumber(x)`.
+
+<StepTitle title="都没命中 " index='7'/>
+
+- **Return** false
+
+<br/>
+
+<RegularTitle type='note' title='可以注意到 == 判断时，有好多分支继续返回 == 或者 === ，这就存在递归的问题。'/>
+
+我们用例子说明：
+
+```javascript
+if( 1 == [1] ){
+    // if( 1 == '1'){}  Step 1 : ToPrimitive([1])
+    // if( 1 === 1){}   Step 2 : ToNumber('1')
+}
+```
+
+<RegularTitle type="flow" title='Strict Equality Comparison 严格等于'/>
+
+假如我们执行 `x===y` ，会遵循以下步骤：
+
+<StepTitle title="如果 x 和 y 类型不一致" index='1'/>
+
+- **Return** `false`
+
+<StepTitle title="如果 x 是数字" index='2'/>
+
+- `x` 和 `y` 有一个为 `NaN` ，**Return** `false`
+- `x` 和 `y` 数值相同 ，**Return** `true`
+- `x` 和 `y` 是 `0` 和 `-0` ，**Return** `true`
+
+<br/>
+
+<RegularTitle type="summary" title="总结下双等于 == 的算法"/>
+
+**➙ 类型一致：** `===`
+
+**➙ null or undefined：** `true`
+
+**➙ 对象：** `ToPrimitive`
+
+**➙ 默认：** `ToNumber`
+
+<br/>
+
+<QuestionTitle> 双等于号也存在值得注意的边界问题 </QuestionTitle>
+
+首先让我们看看第一个例子。
+
+```javascript
+[] == ![] // true
+// [] == false
+// '' == false
+// 0 == false
+// 0 == 0
+// true
+
+[] != [] // true
+// !([] == [])
+// !(false)
+// true
+```
+
+然后是关于布尔值的一个例子，注意单独使用和配合等号使用的区别。
+即，直接使用调用给的是 `ToBoolean` ，而配合等号使用调用的是 `ToPrimitive`
+
+```javascript
+if( [] ) {   } // Well
+if( [] == true ) {   } // Nope
+```
+
+<RegularTitle title="总结下 == 使用场景" type="summary"/>
+
+**要避免的场景：**
+
+**➙ `0` or `''`**
+
+**➙ 布尔值 ：** 因为会调用`ToBoolean`，与`ToPrimitive`不一致。
+
+**➙ 对象：** 在有 `!` 这种强制转换布尔值时，会与`ToPrimitive`不一致。
+
+**可以用的场景：**
+
+**➙ `null` 和 `undefined`**
+
+**➙ 已知类型，并想借助类型转换**
+
+**➙ 已知类型一致**
+
+<br/>
+
+### 静态类型编程
+
+---
+
+当今的一种潮流是将 JavaScript 变成静态编程，如 TypeScript 或者 Flow。
+具体的 TypeScript 会有专门章节进行阐述，在此只简单阐述其意义和与JavaScript类型系统的关系。
+
+<WordTitle type='advantage'>Benefit of TypeScript</WordTitle>
+
+**➙ 获取类型相关的错误**
+
+**➙ 传递类型信息**
+
+**➙ 提供错误警告**
+
+<RegularTitle type='note' title='关于是否采用 TypeScript 这种静态类型'/>
+
+TypeScript 这种静态类型，相当于一定程度抛弃了 JavaScript 原生的动态类型系统，虽然可以避免很多动态类型的麻烦，像强制转换、等号比较之类的问题。
+但是**这终归是用更多代码来逃避 JavaScript 自身的变量系统。**
+相比于使用 TypeScript，理解 JavaScript 自身的变量系统，并修改自己的编程习惯才是更好的选择。
+
+> the better approach is to embrace and learn JS's type system, and to adopt a coding style which makes types as obvious as possible. By doing so, you will make your code more readable and more robust, for experienced and new developers alike
+
+<SectionTitle>2</SectionTitle>
+
+## 从内存角度看类型
+
+---
+
+
+
+<ArticleEnding/>

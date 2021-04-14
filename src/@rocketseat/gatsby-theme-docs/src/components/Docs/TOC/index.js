@@ -59,8 +59,21 @@ export default function TableOfContents({ headings, disableTOC, contentRef }) {
     return (
       <Wrapper>
         <Container>
-          <h2>On this page</h2>
-          <nav>
+          <h2
+              style={{
+                  letterSpacing: .5,
+                  color: '#030852',
+              }}
+          >
+            TABLE OF CONTENTS
+          </h2>
+          <nav
+            style={{
+              borderLeft:'1px solid #d6e4ff',
+              marginLeft:'.5rem',
+              paddingLeft: '1rem',
+            }}
+          >
             <ul>
               {headings
                 .filter((heading) => heading.depth === 2 || heading.depth === 3)
@@ -71,7 +84,8 @@ export default function TableOfContents({ headings, disableTOC, contentRef }) {
                     <li
                       key={heading.value}
                       style={{
-                        marginLeft: heading.depth === 3 ? `8px` : null,
+                        fontWeight:"bolder",
+                        marginLeft: heading.depth === 3 ? `8px`:null,
                       }}
                     >
                       <a

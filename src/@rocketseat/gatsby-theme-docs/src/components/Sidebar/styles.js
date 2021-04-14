@@ -15,6 +15,8 @@ export const Container = styled.aside`
   transition: transform 0.5s;
   height: calc(100vh - 1px);
       
+  border-right: 1px solid #d9d9d9;
+      
   nav {
     width: 100%;
     padding-top: 24px;

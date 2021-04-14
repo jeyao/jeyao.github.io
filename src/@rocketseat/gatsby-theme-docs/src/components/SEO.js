@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import urljoin from 'url-join';
 import { useStaticQuery, graphql } from 'gatsby';
 
-export default function SEO({ description, title, slug, image, children }) {
+export default function Seo({ description, title, slug, image, children }) {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -99,7 +99,7 @@ export default function SEO({ description, title, slug, image, children }) {
   );
 }
 
-SEO.propTypes = {
+Seo.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   slug: PropTypes.string,
@@ -110,7 +110,7 @@ SEO.propTypes = {
   ]),
 };
 
-SEO.defaultProps = {
+Seo.defaultProps = {
   title: '',
   description: '',
   slug: '',

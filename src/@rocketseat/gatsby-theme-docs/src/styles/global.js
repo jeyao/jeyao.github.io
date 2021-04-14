@@ -68,8 +68,9 @@ export default function GlobalStyle() {
           vertical-align: middle;
           line-height: 1;
           padding: 0.2em;
-          background-color: #fff2e8;
-          color: #1f1f1f;
+          margin: 0 .2rem;
+          background-color: #f9f0ff;
+          color: #595959;
           font-size: 14px;
           border-radius: 3px;
           font-feature-settings: 'clig' 0, 'calt' 0;
